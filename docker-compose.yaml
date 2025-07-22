@@ -1,0 +1,115 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    networks:
+      - backend
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=SpringBoot
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=1234
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - backend
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    networks:
+      - backend
+
+  eureka-server:
+    image: yourorg/eureka-server:latest
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    environment:
+      - EUREKA_CLIENT_REGISTER_WITH_EUREKA=false
+      - EUREKA_CLIENT_FETCH_REGISTRY=false
+    networks:
+      - backend
+    depends_on:
+      - zipkin
+
+  activity-service:
+    build: ./activity-service
+    ...
+    environment:
+      - SPRING_DATASOURCE=unused
+    networks:
+      - backend
+    depends_on:
+      - mongodb
+      - eureka-server
+      - zipkin
+
+  ai-service:
+    build: ./ai-service
+    ... same pattern ...
+    depends_on:
+      - mongodb
+      - eureka-server
+      - zipkin
+
+  api-gateway:
+    build: ./api-gateway
+    depends_on:
+      - eureka-server
+      - zipkin
+
+  user-service:
+    build: ./user-service
+    container_name: user-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_APPLICATION_NAME=user-service
+      - SERVER_PORT=8081
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/SpringBoot
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=1234
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - MANAGEMENT_TRACING_SAMPLING_PROBABILITY=1.0
+      - SPRING_ZIPKIN_BASE_URL=http://zipkin:9411/
+    networks:
+      - backend
+    depends_on:
+      - mysql
+      - eureka-server
+      - zipkin
+
+  message-service:
+    build: ./message-service
+    container_name: message-service
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_APPLICATION_NAME=message-service
+      - SERVER_PORT=8084
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - MANAGEMENT_TRACING_SAMPLING_PROBABILITY=1.0
+      - SPRING_ZIPKIN_BASE_URL=http://zipkin:9411/
+    networks:
+      - backend
+    depends_on:
+      - eureka-server
+      - zipkin
+
+volumes:
+  mysql_data:
+
+networks:
+  backend:

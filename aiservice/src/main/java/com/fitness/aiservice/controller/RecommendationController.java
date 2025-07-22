@@ -22,7 +22,7 @@ public class RecommendationController {
     public ResponseEntity<List<Recommendation>> getUserRecommendation(@PathVariable String userId) {
         return ResponseEntity.ok(recommendationService.getUserRecommendation(userId));
     }
-
+    
     @GetMapping("/activity/{activityId}")
     public ResponseEntity<Optional<Recommendation>> getActivityRecommendation(@PathVariable String activityId) {
         return ResponseEntity.ok(recommendationService.getActivityRecommendation(activityId));

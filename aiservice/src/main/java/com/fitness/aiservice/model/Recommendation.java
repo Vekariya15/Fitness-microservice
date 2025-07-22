@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@Document(collation = "recommendations")
+@Document(collection = "recommendations")
 @Builder
 public class Recommendation {
     @Id
