@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 public class UserResponse {
 
     private String id;
+    private String keycloakID;
+
     private String email;
 
     private String password;

@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/test_db
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop  # creates fresh tables for each test run
+    database-platform: org.hibernate.dialect.MySQLDialect
+  main:
+    allow-bean-definition-overriding: true

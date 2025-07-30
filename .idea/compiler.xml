@@ -7,11 +7,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="API" />
-        <module name="loadBalancer" />
+        <module name="configserver" />
         <module name="eureka" />
+        <module name="gateway" />
       </profile>
-      <profile name="Annotation profile for keycloak" enabled="true">
+      <profile name="Annotation profile for userservice" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -19,13 +19,15 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.38/lombok-1.18.38.jar" />
         </processorPath>
         <module name="aiservice" />
-        <module name="keycloak" />
         <module name="activityservice" />
         <module name="userservice" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="API" target="17" />
       <module name="eureka (1)" target="17" />
+      <module name="keycloak" target="17" />
+      <module name="loadBalancer" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -33,8 +35,10 @@
       <module name="API" options="-parameters" />
       <module name="activityservice" options="-parameters" />
       <module name="aiservice" options="-parameters" />
+      <module name="configserver" options="-parameters" />
       <module name="eureka" options="-parameters" />
       <module name="eureka (1)" options="-parameters" />
+      <module name="gateway" options="-parameters" />
       <module name="keycloak" options="-parameters" />
       <module name="loadBalancer" options="-parameters" />
       <module name="userservice" options="-parameters" />

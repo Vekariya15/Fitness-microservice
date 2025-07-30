@@ -1,25 +1,9 @@
-version: '3.8'
 services:
   mongodb:
     image: mongo:latest
     container_name: mongodb
     ports:
       - "27017:27017"
-    networks:
-      - backend
-
-  mysql:
-    image: mysql:8.0
-    container_name: mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=1234
-      - MYSQL_DATABASE=SpringBoot
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=1234
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
     networks:
       - backend
 
@@ -32,7 +16,7 @@ services:
       - backend
 
   eureka-server:
-    image: yourorg/eureka-server:latest
+    image: eurekaserver    # Make sure this matches your jib image name for eureka-server
     container_name: eureka-server
     ports:
       - "8761:8761"
@@ -45,10 +29,17 @@ services:
       - zipkin
 
   activity-service:
-    build: ./activity-service
-    ...
+    image: activityservice   # Matches jib image name for activity-service
+    container_name: activity-service
+    ports:
+      - "8082:8082"
     environment:
-      - SPRING_DATASOURCE=unused
+      - SPRING_APPLICATION_NAME=activity-service
+      - SERVER_PORT=8082
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/fitnessdb
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - MANAGEMENT_TRACING_SAMPLING_PROBABILITY=1.0
+      - SPRING_ZIPKIN_BASE_URL=http://zipkin:9411/
     networks:
       - backend
     depends_on:
@@ -57,48 +48,32 @@ services:
       - zipkin
 
   ai-service:
-    build: ./ai-service
-    ... same pattern ...
+    image: aiservice   # Matches jib image name for ai-service
+    container_name: ai-service
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_APPLICATION_NAME=ai-service
+      - SERVER_PORT=8083
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/fitnessdb
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - MANAGEMENT_TRACING_SAMPLING_PROBABILITY=1.0
+      - SPRING_ZIPKIN_BASE_URL=http://zipkin:9411/
+    networks:
+      - backend
     depends_on:
       - mongodb
       - eureka-server
       - zipkin
 
   api-gateway:
-    build: ./api-gateway
-    depends_on:
-      - eureka-server
-      - zipkin
-
-  user-service:
-    build: ./user-service
-    container_name: user-service
+    image: apiservice   # Matches jib image name for api-gateway
+    container_name: api-gateway
     ports:
-      - "8081:8081"
+      - "8085:8085"
     environment:
-      - SPRING_APPLICATION_NAME=user-service
-      - SERVER_PORT=8081
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/SpringBoot
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=1234
-      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - MANAGEMENT_TRACING_SAMPLING_PROBABILITY=1.0
-      - SPRING_ZIPKIN_BASE_URL=http://zipkin:9411/
-    networks:
-      - backend
-    depends_on:
-      - mysql
-      - eureka-server
-      - zipkin
-
-  message-service:
-    build: ./message-service
-    container_name: message-service
-    ports:
-      - "8084:8084"
-    environment:
-      - SPRING_APPLICATION_NAME=message-service
-      - SERVER_PORT=8084
+      - SPRING_APPLICATION_NAME=API
+      - SERVER_PORT=8085
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
       - MANAGEMENT_TRACING_SAMPLING_PROBABILITY=1.0
       - SPRING_ZIPKIN_BASE_URL=http://zipkin:9411/
@@ -107,9 +82,6 @@ services:
     depends_on:
       - eureka-server
       - zipkin
-
-volumes:
-  mysql_data:
-
+  eureka
 networks:
   backend:

@@ -1,10 +1,10 @@
-package com.gateway.API;
+package com.fitness.configserver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ApiApplicationTests {
+class ConfigserverApplicationTests {
 
 	@Test
 	void contextLoads() {

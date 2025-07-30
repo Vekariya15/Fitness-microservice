@@ -9,50 +9,46 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
+
     @Autowired
     private UserRepository userRepository;
 
     public UserResponse getUserProfile(String userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Usr not Found"));
-        UserResponse userResponse = new UserResponse();
-
-        userResponse.setEmail(user.getEmail());
-        userResponse.setId(user.getId());
-        userResponse.setPassword(user.getPassword());
-        userResponse.setFirstName(user.getFirstName());
-        userResponse.setLastName(user.getLastName());
-        userResponse.setCreatedAt(user.getCreatedAt());
-        userResponse.setUpdateAt(user.getUpdateAt());
-
-        return userResponse;
+        return userRepository.findById(userId)
+                .map(this::toUserResponse)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     public UserResponse register(RegisterRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exits");
-        }
+        return userRepository.existsByEmail(request.getEmail())
+                ? toUserResponse(userRepository.findByEmail(request.getEmail()))
+                : toUserResponse(userRepository.save(toUser(request)));
+    }
+
+    public Boolean existsByKeycloakID(String keycloakID) {
+        return userRepository.existsByKeycloakID(keycloakID);
+    }
+
+    private User toUser(RegisterRequest request) {
         User user = new User();
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
-
-        User saveUser = userRepository.save(user);
-        UserResponse userResponse = new UserResponse();
-
-        userResponse.setEmail(saveUser.getEmail());
-        userResponse.setId(saveUser.getId());
-        userResponse.setPassword(saveUser.getPassword());
-        userResponse.setFirstName(saveUser.getFirstName());
-        userResponse.setLastName(saveUser.getLastName());
-        userResponse.setCreatedAt(saveUser.getCreatedAt());
-        userResponse.setUpdateAt(saveUser.getUpdateAt());
-
-        return userResponse;
+        user.setKeycloakID(request.getKeycloakID());
+        return user;
     }
 
-    public Boolean existByUserID(String userId) {
-        return userRepository.existsById(userId);
+    private UserResponse toUserResponse(User user) {
+        UserResponse response = new UserResponse();
+        response.setEmail(user.getEmail());
+        response.setId(user.getId());
+        response.setKeycloakID(user.getKeycloakID());
+        response.setPassword(user.getPassword());
+        response.setFirstName(user.getFirstName());
+        response.setLastName(user.getLastName());
+        response.setCreatedAt(user.getCreatedAt());
+        response.setUpdateAt(user.getUpdateAt());
+        return response;
     }
 }
-
