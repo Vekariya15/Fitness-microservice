@@ -25,7 +25,7 @@ public class Activity {
     private Integer caloriesBurned;
     private LocalDateTime startTime;
     @Field("metrics")
-    private Map<String, Object> addtionalMAtrics;
+    private Map<String, Object> additionalMetrics;
     @CreatedDate
     private LocalDateTime createdAt;
     @LastModifiedDate

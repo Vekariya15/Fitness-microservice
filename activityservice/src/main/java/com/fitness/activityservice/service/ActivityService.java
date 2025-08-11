@@ -37,7 +37,7 @@ public class ActivityService {
         activity.setDuration(request.getDuration());
         activity.setCaloriesBurned(request.getCaloriesBurned());
         activity.setStartTime(request.getStartTime());
-        activity.setAddtionalMAtrics(request.getAddtionalMAtrics());
+        activity.setAdditionalMetrics(request.getAdditionalMetrics());
         Activity savedAcivity = activityRepository.save(activity);
 
         // publish to RabbitMQ for AI processing
@@ -58,7 +58,7 @@ public class ActivityService {
         response.setDuration(activity.getDuration());
         response.setCaloriesBurned(activity.getCaloriesBurned());
         response.setStartTime(activity.getStartTime());
-        response.setAddtionalMAtrics(activity.getAddtionalMAtrics());
+        response.setAdditionalMetrics(activity.getAdditionalMetrics());
         response.setCreatedAt(activity.getCreatedAt());
         response.setUpdatedAt(activity.getUpdatedAt());
         return response;

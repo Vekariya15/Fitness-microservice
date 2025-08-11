@@ -40,7 +40,7 @@ class ActivityControllerTest {
         request.setDuration(30);
         request.setCaloriesBurned(250);
         request.setStartTime(LocalDateTime.of(2025, 7, 28, 10, 0));
-        request.setAddtionalMAtrics(new HashMap<>());
+        request.setAdditionalMetrics(new HashMap<>());
 
         ActivityResponse response = new ActivityResponse();
         response.setId("activity001");
@@ -49,7 +49,7 @@ class ActivityControllerTest {
         response.setDuration(30);
         response.setCaloriesBurned(250);
         response.setStartTime(request.getStartTime());
-        response.setAddtionalMAtrics(request.getAddtionalMAtrics());
+        response.setAdditionalMetrics(request.getAdditionalMetrics());
         response.setCreatedAt(LocalDateTime.now());
         response.setUpdatedAt(LocalDateTime.now());
 
@@ -80,7 +80,7 @@ class ActivityControllerTest {
         metrics.put("heartRate", 120);
         metrics.put("steps", 6000);
         metrics.put("location", "Central Park");
-        response.setAddtionalMAtrics(metrics);  // Keep using the same misspelled method if it's in your DTO
+        response.AdditionalMetricsv(metrics);  // Keep using the same misspelled method if it's in your DTO
         response.setCreatedAt(LocalDateTime.of(2025, 7, 17, 11, 1, 47, 500_000_000));  // .5 seconds
         response.setUpdatedAt(LocalDateTime.of(2025, 7, 17, 11, 1, 47, 500_000_000));
 

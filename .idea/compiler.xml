@@ -7,11 +7,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="configserver" />
         <module name="eureka" />
         <module name="gateway" />
+        <module name="configserver" />
       </profile>
-      <profile name="Annotation profile for userservice" enabled="true">
+      <profile name="Annotation profile for aiservice" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -27,12 +27,14 @@
       <module name="API" target="17" />
       <module name="eureka (1)" target="17" />
       <module name="keycloak" target="17" />
+      <module name="KeyclockRoleBased" target="17" />
       <module name="loadBalancer" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="API" options="-parameters" />
+      <module name="KeyclockRoleBased" options="-parameters" />
       <module name="activityservice" options="-parameters" />
       <module name="aiservice" options="-parameters" />
       <module name="configserver" options="-parameters" />
