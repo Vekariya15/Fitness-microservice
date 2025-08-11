@@ -80,7 +80,7 @@ class ActivityControllerTest {
         metrics.put("heartRate", 120);
         metrics.put("steps", 6000);
         metrics.put("location", "Central Park");
-        response.AdditionalMetricsv(metrics);  // Keep using the same misspelled method if it's in your DTO
+        response.setAdditionalMetrics(metrics);  // Keep using the same misspelled method if it's in your DTO
         response.setCreatedAt(LocalDateTime.of(2025, 7, 17, 11, 1, 47, 500_000_000));  // .5 seconds
         response.setUpdatedAt(LocalDateTime.of(2025, 7, 17, 11, 1, 47, 500_000_000));
 
